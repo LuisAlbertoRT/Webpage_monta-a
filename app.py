@@ -429,7 +429,7 @@ with tab_lista:
                 if tel:
                     texto_mensaje = f"¡Hola! Vi el evento '{ev['titulo']}' del {fecha_formateada}. ¿Quedan lugares?"
                     link_wa = f"https://wa.me/{tel}?text={urllib.parse.quote(texto_mensaje)}"
-                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Solicitar Informes vía WhatsApp</a>', unsafe_allow_html=True)
+                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Número asociado</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
             
     mostrar_developer_footer()
