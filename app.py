@@ -25,6 +25,39 @@ try:
 except Exception as e:
     st.error("Error de conexión con la base de datos.")
 
+# Diccionarios de traducción manual (Garantiza compatibilidad total en la nube de Streamlit)
+MESES_ES = {
+    "January": "Enero", "February": "Febrero", "March": "Marzo", "April": "Abril",
+    "May": "Mayo", "June": "Junio", "July": "Julio", "August": "Agosto",
+    "September": "Septiembre", "October": "Octubre", "November": "Noviembre", "December": "Diciembre"
+}
+
+DIAS_ES = {
+    "Monday": "Lunes", "Tuesday": "Martes", "Wednesday": "Miércoles", 
+    "Thursday": "Jueves", "Friday": "Viernes", "Saturday": "Sábado", "Sunday": "Domingo"
+}
+
+def formatear_fecha_es(fecha_dt):
+    """Transforma una fecha en texto largo en español."""
+    dia_sem = DIAS_ES.get(fecha_dt.strftime("%A"), fecha_dt.strftime("%A"))
+    dia_num = fecha_dt.strftime("%d")
+    mes = MESES_ES.get(fecha_dt.strftime("%B"), fecha_dt.strftime("%B"))
+    anio = fecha_dt.strftime("%Y")
+    return f"{dia_sem}, {dia_num} de {mes} de {anio}"
+
+def formatear_mes_anio_es(fecha_dt):
+    """Transforma el período de la agenda (Radio buttons) a español."""
+    mes = MESES_ES.get(fecha_dt.strftime("%B"), fecha_dt.strftime("%B"))
+    anio = fecha_dt.strftime("%Y")
+    return f"{mes} {anio}"
+
+def formatear_fecha_corta_es(fecha_dt):
+    """Transforma la fecha corta (Tarjetas) a formato legible en español."""
+    dia_num = fecha_dt.strftime("%d")
+    mes_corto = MESES_ES.get(fecha_dt.strftime("%B"), fecha_dt.strftime("%B"))[:3]
+    anio = fecha_dt.strftime("%Y")
+    return f"{dia_num} {mes_corto}, {anio}"
+
 # 3. ESTILOS CSS AVANZADOS (Estilo Strava Orange + Tooltip Fix + Footer)
 st.markdown("""
     <style>
@@ -326,7 +359,7 @@ with tab_calendario:
     
     meses_disponibles = ["Todos los próximos"]
     for ev in eventos_futuros:
-        nombre_mes = ev['fecha_dt'].strftime("%B %Y").capitalize()
+        nombre_mes = formatear_mes_anio_es(ev['fecha_dt'])
         if nombre_mes not in meses_disponibles:
             meses_disponibles.append(nombre_mes)
             
@@ -335,12 +368,12 @@ with tab_calendario:
     
     eventos_agenda = eventos_futuros
     if mes_seleccionado != "Todos los próximos":
-        eventos_agenda = [e for e in eventos_futuros if e['fecha_dt'].strftime("%B %Y").capitalize() == mes_seleccionado]
+        eventos_agenda = [e for e in eventos_futuros if formatear_mes_anio_es(e['fecha_dt']) == mes_seleccionado]
         
     if eventos_agenda:
         st.markdown('<div class="agenda-timeline">', unsafe_allow_html=True)
         for ev in eventos_agenda:
-            f_format = ev['fecha_dt'].strftime("%A, %d de %B de %Y")
+            f_format = formatear_fecha_es(ev['fecha_dt'])
             st.markdown(f"""
             <div class="agenda-node">
                 <span style="color: #FC4C02; font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">🍊 {f_format.upper()}</span>
@@ -376,7 +409,7 @@ with tab_lista:
         st.info("No se encontraron expediciones.")
     else:
         for ev in eventos_filtrados:
-            fecha_formateada = ev['fecha_dt'].strftime("%d %b, %Y") if 'fecha_dt' in ev else ev['fecha']
+            fecha_formateada = formatear_fecha_corta_es(ev['fecha_dt']) if 'fecha_dt' in ev else ev['fecha']
             es_pasado = " (Finalizado)" if ev.get('fecha_dt') and ev['fecha_dt'] < hoy else ""
             color_titulo = "#94A3B8" if es_pasado else "#0F172A"
 
@@ -396,7 +429,7 @@ with tab_lista:
                 if tel:
                     texto_mensaje = f"¡Hola! Vi el evento '{ev['titulo']}' del {fecha_formateada}. ¿Quedan lugares?"
                     link_wa = f"https://wa.me/{tel}?text={urllib.parse.quote(texto_mensaje)}"
-                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Telefono asociado</a>', unsafe_allow_html=True)
+                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Solicitar Informes vía WhatsApp</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
             
     mostrar_developer_footer()
@@ -412,7 +445,7 @@ with tab_mapa:
     for ev in eventos:
         if ev.get('latitud') and ev.get('longitud'):
             try:
-                fecha_str = ev['fecha_dt'].strftime("%d %b, %Y") if 'fecha_dt' in ev else ev['fecha']
+                fecha_str = formatear_fecha_corta_es(ev['fecha_dt']) if 'fecha_dt' in ev else ev['fecha']
                 coordenadas.append({
                     "lat": float(ev['latitud']),
                     "lon": float(ev['longitud']),
