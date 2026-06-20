@@ -317,7 +317,7 @@ with tab_calendario:
                 if tel:
                     texto_wa = f"¡Hola! Me interesa la salida de {ev['titulo']} del {ev['fecha']}. ¿Me das más información?"
                     link_wa = f"https://wa.me/{tel}?text={urllib.parse.quote(texto_wa)}"
-                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Unirse al Grupo / Reservar</a>', unsafe_allow_html=True)
+                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Telefono asociado</a>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.info("No hay eventos programados para este mes.")
