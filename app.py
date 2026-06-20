@@ -25,7 +25,7 @@ try:
 except Exception as e:
     st.error("Error de conexión con la base de datos.")
 
-# 3. ESTILOS CSS AVANZADOS (Estilo Strava Orange + Tooltip Fix)
+# 3. ESTILOS CSS AVANZADOS (Estilo Strava Orange + Tooltip Fix + Footer)
 st.markdown("""
     <style>
     /* Fondo principal: Blanco alpino */
@@ -239,6 +239,32 @@ st.markdown("""
         border-radius: 8px !important;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
     }
+
+    /* ESTILO PREMIUM PARA EL FOOTER DEL DESARROLLADOR */
+    .dev-footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #E2E8F0;
+    }
+    .dev-footer p {
+        font-size: 13px !important;
+        color: #64748B !important;
+        margin-bottom: 8px !important;
+    }
+    .dev-footer a {
+        color: #FC4C02 !important;
+        text-decoration: none !important;
+        font-weight: 700 !important;
+        font-size: 14px !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: color 0.2s ease;
+    }
+    .dev-footer a:hover {
+        color: #FF6624 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -255,7 +281,7 @@ try:
     response = supabase.table("eventos_montana").select("*").execute()
     eventos_crudos = response.data
 except Exception as e:
-    st.error(f"Error al cargar base de datos: {e}")
+    st.error("Error de conexión con la base de datos.")
     eventos_crudos = []
 
 # Lógica de Ordenación Cronológica Ascendente
@@ -276,6 +302,18 @@ for ev in eventos_crudos:
 
 eventos_futuros.sort(key=lambda x: x['fecha_dt'])
 eventos = eventos_futuros + eventos_pasados
+
+# Componente reutilizable del Pie de Página (Footer) para proyectos
+def mostrar_developer_footer():
+    st.markdown("""
+        <div class="dev-footer">
+            <p>¿Te gusta esta plataforma o necesitas una solución similar?</p>
+            <a href="https://github.com/LuisAlbertoRT" target="_blank">
+                <svg height="16" width="16" viewBox="0 0 16 16" style="fill: #FC4C02; vertical-align: middle;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+                Contáctame en GitHub para Proyectos de Programación
+            </a>
+        </div>
+    """, unsafe_allow_html=True)
 
 # 6. CONFIGURACIÓN DE PESTAÑAS
 tab_calendario, tab_lista, tab_mapa, tab_about = st.tabs(["📅 Agenda", "📌 Eventos", "🗺️ Mapa", "🤝 Nosotros"])
@@ -317,10 +355,12 @@ with tab_calendario:
                 if tel:
                     texto_wa = f"¡Hola! Me interesa la salida de {ev['titulo']} del {ev['fecha']}. ¿Me das más información?"
                     link_wa = f"https://wa.me/{tel}?text={urllib.parse.quote(texto_wa)}"
-                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Telefono asociado</a>', unsafe_allow_html=True)
+                    st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Teléfono asociado</a>', unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.info("No hay eventos programados para este mes.")
+        
+    mostrar_developer_footer()
 
 # ---------------------------------------------------------
 # PESTAÑA 2: LISTA GENERAL DE EVENTOS
@@ -358,6 +398,8 @@ with tab_lista:
                     link_wa = f"https://wa.me/{tel}?text={urllib.parse.quote(texto_mensaje)}"
                     st.markdown(f'<a href="{link_wa}" target="_blank" class="btn-wa-premium">💬 Solicitar Informes vía WhatsApp</a>', unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
+            
+    mostrar_developer_footer()
 
 # ---------------------------------------------------------
 # PESTAÑA 3: MAPA EXPLORADOR CON ENTORNO STRAVA & FIXED TOOLTIP
@@ -386,7 +428,7 @@ with tab_mapa:
             "ScatterplotLayer",
             df_mapa,
             get_position="[lon, lat]",
-            get_color="[252, 76, 2, 210]",  # Cambiado a Naranja Strava (#FC4C02)
+            get_color="[252, 76, 2, 210]",  # Naranja Strava
             get_radius=6000,
             pickable=True,
             opacity=0.85,
@@ -414,6 +456,8 @@ with tab_mapa:
         ))
     else:
         st.info("No hay ubicaciones registradas con coordenadas válidas.")
+        
+    mostrar_developer_footer()
 
 # ---------------------------------------------------------
 # PESTAÑA 4: SOBRE NOSOTROS (Texto Ampliado y Épico)
@@ -458,3 +502,5 @@ with tab_about:
         <p style="color: #64748B; font-size: 14px; margin: 0; font-style: italic;">"Subir una montaña no es solo alcanzar la cumbre, es asegurar la logística, respetar el entorno y certificar que todo el grupo regrese a salvo a casa."</p>
     </div>
     """, unsafe_allow_html=True)
+    
+    mostrar_developer_footer()
