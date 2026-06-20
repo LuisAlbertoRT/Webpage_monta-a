@@ -25,15 +25,20 @@ try:
 except Exception as e:
     st.error("Error de conexión con la base de datos.")
 
-# 3. ESTILOS CSS AVANZADOS (Rediseño de Interfaz Premium - MODO LUMINOSO)
+# 3. ESTILOS CSS AVANZADOS (Estilo Strava Orange + Tooltip Fix)
 st.markdown("""
     <style>
-    /* Fondo principal: Blanco alpino texturizado suave */
+    /* Fondo principal: Blanco alpino */
     .stApp { 
         background-color: #F8FAFC; 
     }
     
-    /* Contenedor del Banner Principal con Imagen de Fondo y degradado suave */
+    /* Forzar color oscuro en textos globales del sistema */
+    .stApp p, .stApp span, .stApp label, .stApp h1, .stApp h2, .stApp h3, .stApp h4 {
+        color: #0F172A !important;
+    }
+    
+    /* Contenedor del Banner Principal */
     .hero-banner {
         background-image: linear-gradient(rgba(255, 255, 255, 0.1), #F8FAFC), 
                           url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80');
@@ -45,22 +50,20 @@ st.markdown("""
         margin-bottom: 25px;
         box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
     }
-    .hero-title {
-        color: #0F172A;
+    .hero-banner .hero-title {
+        color: #0F172A !important;
         font-size: 38px;
         font-weight: 800;
         letter-spacing: -1px;
         margin-bottom: 6px;
-        text-shadow: 0 2px 10px rgba(255,255,255,0.8);
     }
-    .hero-subtitle {
-        color: #334155;
+    .hero-banner .hero-subtitle {
+        color: #334155 !important;
         font-size: 15px;
         font-weight: 500;
-        text-shadow: 0 2px 8px rgba(255,255,255,0.8);
     }
 
-    /* Pestañas de Navegación Estilizadas (Luminosas) */
+    /* Pestañas de Navegación (Estilo Strava) */
     .stTabs [data-baseweb="tab-list"] {
         gap: 6px;
         background-color: #E2E8F0;
@@ -73,22 +76,40 @@ st.markdown("""
         white-space: pre;
         background-color: transparent;
         border-radius: 10px;
-        color: #475569;
-        font-weight: 600;
         transition: all 0.3s ease;
         padding: 0 16px;
     }
-    .stTabs [data-baseweb="tab"]:hover {
-        color: #0F172A;
-        background-color: #F1F5F9;
+    .stTabs [data-baseweb="tab"] p {
+        color: #475569 !important;
+        font-weight: 600 !important;
     }
+    .stTabs [data-baseweb="tab"]:hover p {
+        color: #0F172A !important;
+    }
+    /* Pestaña activa: Naranja Strava */
     .stTabs [aria-selected="true"] {
-        background-color: #00C853 !important;
+        background-color: #FC4C02 !important;
+        box-shadow: 0 4px 12px rgba(252, 76, 2, 0.25);
+    }
+    .stTabs [aria-selected="true"] p {
         color: #FFFFFF !important;
-        box-shadow: 0 4px 12px rgba(0, 200, 83, 0.25);
     }
 
-    /* Tarjetas de Eventos de Diseño Moderno (Cards Claras) */
+    /* CORRECCIÓN PARA EXPENDERS */
+    [data-testid="stExpander"] details summary {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+    }
+    [data-testid="stExpander"] details summary svg {
+        fill: #0F172A !important;
+    }
+    [data-testid="stExpander"] {
+        background-color: #FFFFFF !important;
+        border: 1px solid #E2E8F0 !important;
+        border-radius: 12px !important;
+    }
+
+    /* Tarjetas de Eventos Claras */
     .event-card {
         background: #FFFFFF;
         padding: 24px;
@@ -96,37 +117,36 @@ st.markdown("""
         border: 1px solid #E2E8F0;
         margin-bottom: 20px;
         box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
-        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        transition: transform 0.2s ease, border-color 0.2s ease;
     }
     .event-card:hover {
-        border-color: #00C853;
+        border-color: #FC4C02;
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(0, 200, 83, 0.08);
     }
-    .event-title { 
-        color: #0F172A; 
+    .event-card .event-title { 
+        color: #0F172A !important; 
         font-size: 23px; 
         font-weight: 700; 
         margin-bottom: 6px; 
     }
-    .event-meta { 
-        color: #64748B; 
+    .event-card .event-meta { 
+        color: #64748B !important; 
         font-size: 14px; 
         margin-bottom: 16px; 
         display: flex; 
         gap: 18px;
         font-weight: 500;
     }
-    .event-desc { 
-        color: #334155; 
+    .event-card .event-desc { 
+        color: #334155 !important; 
         font-size: 15px; 
         line-height: 1.6; 
         margin-bottom: 18px; 
     }
 
-    /* Botón Premium Verde Vibrante de WhatsApp */
+    /* Botón Premium Naranja Strava de WhatsApp */
     .btn-wa-premium {
-        background-color: #00C853;
+        background-color: #FC4C02;
         color: #FFFFFF !important;
         padding: 14px 24px;
         border-radius: 12px;
@@ -137,15 +157,14 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         width: 100%;
-        box-shadow: 0 4px 15px rgba(0, 200, 83, 0.2);
+        box-shadow: 0 4px 15px rgba(252, 76, 2, 0.2);
         text-align: center;
     }
     .btn-wa-premium:hover {
-        background-color: #00E676;
-        box-shadow: 0 6px 20px rgba(0, 200, 83, 0.35);
+        background-color: #FF6624;
     }
 
-    /* Estilo Línea del Tiempo de la Agenda (Clara) */
+    /* Estilo Línea del Tiempo de la Agenda */
     .agenda-timeline {
         border-left: 3px solid #E2E8F0;
         padding-left: 24px;
@@ -166,45 +185,59 @@ st.markdown("""
         position: absolute;
         left: -37px;
         top: 24px;
-        background: #00C853;
+        background: #FC4C02;
         width: 12px;
         height: 12px;
         border-radius: 50%;
         border: 4px solid #F8FAFC;
     }
 
-    /* Estilos Premium para la pestaña Sobre Nosotros en Móvil (Clara) */
+    /* Estilos Premium para la pestaña Sobre Nosotros */
     .about-card {
         background: #FFFFFF;
         border: 1px solid #E2E8F0;
         border-radius: 20px;
-        padding: 22px;
-        margin-bottom: 20px;
+        padding: 24px;
+        margin-bottom: 25px;
         box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
     }
     .about-badge {
-        background-color: rgba(0, 200, 83, 0.1);
-        color: #00B0FF;
-        color: #00C853;
+        background-color: rgba(252, 76, 2, 0.1);
+        color: #FC4C02;
         padding: 6px 12px;
         border-radius: 8px;
         font-size: 12px;
         font-weight: 700;
         display: inline-block;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     .about-text {
-        color: #334155;
-        font-size: 15px;
-        line-height: 1.6;
+        color: #334155 !important;
+        font-size: 15.5px;
+        line-height: 1.7;
     }
     
-    /* Pequeños ajustes para inputs del modo claro */
+    /* Inputs de texto forzados */
     .stTextInput>div>div>input {
         background-color: #FFFFFF !important;
         color: #0F172A !important;
         border: 1px solid #CBD5E1 !important;
+    }
+
+    /* FIX INYECTADO PARA EL TOOLTIP DEL MAPA EN CELULARES */
+    .deckgl-mouse-over-boundary {
+        max-width: 280px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        font-size: 11px !important;
+        font-family: inherit !important;
+        padding: 8px 12px !important;
+        background-color: rgba(15, 23, 42, 0.95) !important;
+        color: #FFFFFF !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -272,7 +305,7 @@ with tab_calendario:
             f_format = ev['fecha_dt'].strftime("%A, %d de %B de %Y")
             st.markdown(f"""
             <div class="agenda-node">
-                <span style="color: #00C853; font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">🟢 {f_format.upper()}</span>
+                <span style="color: #FC4C02; font-weight: 700; font-size: 12px; letter-spacing: 0.5px;">🍊 {f_format.upper()}</span>
                 <h3 style="margin: 6px 0 4px 0; color: #0F172A; font-size: 21px; font-weight: 700;">{ev['titulo']}</h3>
                 <p style="margin: 0; color: #64748B; font-size: 14px;">Guía u Organizador: <b style="color: #334155;">{ev['organizador']}</b></p>
             </div>
@@ -327,11 +360,11 @@ with tab_lista:
             st.markdown("<br>", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# PESTAÑA 3: MAPA EXPLORADOR CORREGIDO (CON ENTORNO CLARO)
+# PESTAÑA 3: MAPA EXPLORADOR CON ENTORNO STRAVA & FIXED TOOLTIP
 # ---------------------------------------------------------
 with tab_mapa:
     st.markdown("<h4 style='color: #0F172A; margin-bottom: 2px;'>🗺️ Mapa Base de Expediciones Activas</h4>", unsafe_allow_html=True)
-    st.write("Pasa el cursor o presiona los círculos para ver el nombre y la fecha de la expedición.")
+    st.write("Presiona los círculos para ver los detalles sin que se desborde la pantalla.")
     
     coordenadas = []
     for ev in eventos:
@@ -341,7 +374,7 @@ with tab_mapa:
                 coordenadas.append({
                     "lat": float(ev['latitud']),
                     "lon": float(ev['longitud']),
-                    "tooltip_text": f"{ev['titulo']} — 📅 {fecha_str}"
+                    "tooltip_text": f"{ev['titulo']} \n 📅 {fecha_str}"
                 })
             except:
                 continue
@@ -353,14 +386,14 @@ with tab_mapa:
             "ScatterplotLayer",
             df_mapa,
             get_position="[lon, lat]",
-            get_color="[0, 200, 83, 210]",  # Verde pino unificado
+            get_color="[252, 76, 2, 210]",  # Cambiado a Naranja Strava (#FC4C02)
             get_radius=6000,
             pickable=True,
             opacity=0.85,
             stroked=True,
             filled=True,
             radius_scale=1,
-            radius_min_pixels=7,
+            radius_min_pixels=8,
             radius_max_pixels=16,
             line_width_min_pixels=1.5,
             get_line_color=[255, 255, 255]
@@ -373,7 +406,6 @@ with tab_mapa:
             pitch=0
         )
         
-        # Estilo "road" nativo que se acopla a la perfección con la paleta limpia del sitio
         st.pydeck_chart(pdk.Deck(
             layers=[layer],
             initial_view_state=view_state,
@@ -384,23 +416,24 @@ with tab_mapa:
         st.info("No hay ubicaciones registradas con coordenadas válidas.")
 
 # ---------------------------------------------------------
-# PESTAÑA 4: SOBRE NOSOTROS
+# PESTAÑA 4: SOBRE NOSOTROS (Texto Ampliado y Épico)
 # ---------------------------------------------------------
 with tab_about:
     st.markdown("<h3 style='color: #0F172A; font-weight: 700; margin-bottom: 5px;'>🤝 Conoce el Proyecto</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='color: #475569;'>Nuestra misión es hacer la montaña accesible y segura para todos.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #FC4C02; font-weight: bold; font-style: italic;'>Construyendo la red comunitaria de montañismo más grande de México.</p>", unsafe_allow_html=True)
     st.markdown("##")
     
     st.image(
-        "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?auto=format&fit=crop&w=800&q=80", 
+        "https://images.unsplash.com/photo-1757269267274-085b02b0ce8a?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
         caption="Comunidad unida por la naturaleza",
         use_container_width=True
     )
     st.markdown("""
     <div class="about-card">
-        <div class="about-badge">Propósito</div>
+        <div class="about-badge">Nuestra Misión</div>
         <div class="about-text">
-            <b>México Al Aire Libre</b> es una iniciativa 100% sin fines de lucro. Nacimos con la idea fija de crear un puente directo entre montañistas apasionados y guías locales, eliminando intermediarios para fomentar el turismo deportivo en México.
+            <b>México Al Aire Libre</b> nació bajo una premisa firme: la montaña pertenece a todos, pero recorrerla requiere comunidad. Somos un proyecto independiente y 100% sin fines de lucro enfocado en <b>hacer el montañismo y el senderismo accesibles, organizados y seguros en todo el territorio nacional</b>.<br><br>
+            A través de esta plataforma, centralizamos las convocatorias de guías locales, clubes de senderismo y líderes de expedición en un solo calendario abierto. Rompemos las barreras de desinformación para que cualquier entusiasta —desde quien busca su primer Ajusco hasta quien se prepara para el Pico de Orizaba— encuentre un grupo respaldado con el cual marchar, reduciendo los riesgos del aislamiento en la naturaleza.
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -412,15 +445,16 @@ with tab_about:
     )
     st.markdown("""
     <div class="about-card">
-        <div class="about-badge">Seguridad en Equipo</div>
+        <div class="about-badge">Seguridad e Infraestructura Colectiva</div>
         <div class="about-text">
-            La montaña se respeta. Creamos este espacio no solo para armar rutas, sino para asegurar que ningún equipo salga rezagado. Promovemos el <b>cuidado mutuo</b>, compartimos la logística de seguridad de los líderes de grupo y verificamos que cada expedición cuente con el equipo de comunicación y rescate necesario.
+            Creemos que la seguridad en alta montaña no es opcional, es una responsabilidad compartida. Este espacio promueve de manera rigurosa la <b>coordinación y el cuidado mutuo de los equipos</b>. <br><br>
+            No permitimos que ningún senderista camine a ciegas. Exigimos canales de comunicación directa y transparente a través de enlaces directos a grupos de coordinación; así, los equipos validan listas de equipo técnico necesario, comparten el rastreo satelital de las rutas, revisan las condiciones climáticas en tiempo real y aseguran que los líderes cuenten con botiquines de primer respondiente. En la montaña salimos juntos, nos cuidamos en la ruta y regresamos completos.
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="about-card" style="text-align: center; border-left: 4px solid #00C853;">
-        <p style="color: #64748B; font-size: 14px; margin: 0; font-style: italic;">"Subir una montaña no es solo alcanzar la cumbre, es asegurarnos de que todo el grupo regrese a salvo a casa."</p>
+    <div class="about-card" style="text-align: center; border-left: 4px solid #FC4C02;">
+        <p style="color: #64748B; font-size: 14px; margin: 0; font-style: italic;">"Subir una montaña no es solo alcanzar la cumbre, es asegurar la logística, respetar el entorno y certificar que todo el grupo regrese a salvo a casa."</p>
     </div>
     """, unsafe_allow_html=True)
